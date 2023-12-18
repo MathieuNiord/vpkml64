@@ -8,13 +8,12 @@
 
 (executable
  (public_name vpkml64)
- (name main)
+ (name vpkml64)
  (foreign_stubs
   (language c)
   (names terminal input))
- (libraries vpkml64 cohttp cohttp-lwt-unix lwt lambdasoup re str yojson lwt.unix lwt_ppx uri)
- (preprocess (pps lwt_ppx)))
-(env
-  (dev
-    ; (flags (:standard -warn-error -26-27-32-33-35)
-    ))
+ (libraries vpkml64 cohttp cohttp-lwt-unix lwt lambdasoup re str yojson))
+
+; (env
+;   (dev
+;     (flags (:standard -warn-error -26-27-32-33-35))))

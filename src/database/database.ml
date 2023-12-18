@@ -35,7 +35,7 @@ let make
   ; icon_from_page        = icon_from_page
   ; background_from_page  = background_from_page
   ; logo_from_page        = logo_from_page
-  ; file                  = (Config.scrapped_path ^ (String.lowercase_ascii name) ^ ".json") }
+  ; file                  = (Config.db_path ^ (String.lowercase_ascii name) ^ ".json") }
 
 let soup (db : t) (page: int) : soup node = Lwt_main.run (body (db.url_games ^ (string_of_int page))) |> Soup.parse ;;
 
@@ -59,4 +59,4 @@ let local_databases : string list =
     | hd::tl ->
       if Filename.check_suffix hd ".json" then hd::(aux tl)
       else (aux tl)
-  in aux (Array.to_list (Sys.readdir Config.scrapped_path))
+  in aux (Array.to_list (Sys.readdir Config.db_path))

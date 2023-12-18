@@ -1,6 +1,6 @@
 (* === Scrapping configuration === *)
 (* Scrapped results output *)
-let scrapped_path = ".\\db\\"
+let db_path = ".\\db\\"
 (* ================================ *)
 
 

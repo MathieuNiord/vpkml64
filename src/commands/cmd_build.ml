@@ -1,6 +1,7 @@
 let build () : unit =
   let open Game in
   let open Output in
+    SysUtils.create_directory Config.vpks_path ;
     Display.print_output ((Output.build_title ()) ^ (Output.build_light_title "Build .vpk from .n64")) ;
     Collector.collect (None)
     |> Checker.check_all

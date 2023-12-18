@@ -126,3 +126,5 @@ let update_database (db : Database.t) : unit =
       updated
     ) |> Json.Serializer.from_list
   in Json.write updated_list db.file
+
+let init : unit = SysUtils.create_directory Config.db_path

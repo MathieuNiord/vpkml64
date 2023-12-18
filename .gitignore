@@ -25,5 +25,22 @@ setup.log
 # Dune generated files
 *.install
 
+# Dune libs directory
+lib/
+
+# Dune test directory
+test/
+
 # Local OPAM switch
 _opam/
+
+# Local files
+db/
+roms/
+res/vpks/
+
+# Makefile
+Makefile
+
+# VsCode settings
+.vscode/

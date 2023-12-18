@@ -36,11 +36,8 @@ _opam/
 
 # Local files
 db/
-roms/
+roms/*
 res/vpks/
-
-# Makefile
-Makefile
 
 # VsCode settings
 .vscode/

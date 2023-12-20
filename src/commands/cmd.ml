@@ -1,5 +1,6 @@
-type t = string * (unit -> unit)
+type t_state = IMPORTANT | DISABLED | ENABLED
+type t = { name : string ; f : (unit -> unit) ; state : t_state ref}
 
-let get_name (cmd : t) : string = let (name, _) = cmd in name ;;
-let get_fun (cmd : t) : (unit -> unit) = let (_, f) = cmd in f ;;
-let run (cmd : t) : unit = (get_fun cmd) () ;;
+let set_state (cmd : t) (state : t_state) : unit = (cmd.state) := state
+
+let run (cmd : t) : unit = cmd.f ()

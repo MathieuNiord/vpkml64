@@ -1,3 +1,4 @@
+open Cmd
 open Output
 
 let show_credits () : unit =
@@ -12,4 +13,4 @@ let show_credits () : unit =
   Menu.back_to_menu ()
 ;;
 
-let cmd : Cmd.t = ("Show credits", show_credits) ;;
+let cmd : t = { name = "Show credits" ; f = show_credits ; state = ref ENABLED } ;;

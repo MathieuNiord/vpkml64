@@ -1,3 +1,5 @@
+open Cmd
+
 let build () : unit =
   let open Game in
   let open Output in
@@ -17,6 +19,8 @@ let build () : unit =
       ; print_endline "\n"
     ))
     ; Menu.back_to_menu ()
-;;
 
-let cmd : Cmd.t = ("Build .vpk from .n64", build) ;;
+let initial_state : t_state =
+  if ((Repository.count_all ()) = 0) then DISABLED else ENABLED
+
+let cmd : t = { name = "Build .vpk from .n64" ; f = build ; state = ref initial_state }

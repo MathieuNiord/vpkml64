@@ -1,4 +1,5 @@
 let cmds = [
+  Cmd_scrap.cmd;
   Cmd_build.cmd;
   Cmd_update_list.cmd;
   Cmd_update_medias.cmd;

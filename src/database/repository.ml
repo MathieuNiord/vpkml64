@@ -7,8 +7,17 @@ let local_databases : Database.t list = [DbHfsdb.db ; DbGamesdb.db]
 
 (** [count db] returns the number of records in the database [db]. *)
 let count (db : Database.t) : int =
-  let json : Json.t = Json.parse_file db.file in
-  Json.Deserializer.to_list json |> List.length
+  if not (Sys.file_exists db.file) then 0
+  else
+    let json : Json.t = Json.parse_file db.file in
+    Json.Deserializer.to_list json |> List.length
+
+let count_all () : int =
+  let rec aux (databases : Database.t list) : int =
+    match databases with
+    | [] -> 0
+    | hd::tl -> (count hd) + (aux tl)
+  in aux local_databases
 
 (** [get slug db] returns the record with the given [slug] from the database [db],
     or [None] if no such record exists. *)

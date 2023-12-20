@@ -10,8 +10,6 @@ let make_action (action : t_action) : unit =
   | _ -> ()
   ; flush stdout
 
-let columns : int ref = ref !Terminal_width.latest_width
-
 let compute_width (output : string) : int =
   String.split_on_char '\n' output
   |> List.map String.length

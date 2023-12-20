@@ -51,12 +51,3 @@ let games_number (db : t) : int =
 let icon (src : string) (db : t) : Assets.t option = db.icon_from_page src ;;
 let background (src : string) (db : t) : Assets.t option = db.background_from_page src ;;
 let logo (src : string) (db : t) : Assets.t option = db.logo_from_page src ;;
-
-let local_databases : string list =
-  let rec aux (files : string list) : string list =
-    match files with
-    | [] -> []
-    | hd::tl ->
-      if Filename.check_suffix hd ".json" then hd::(aux tl)
-      else (aux tl)
-  in aux (Array.to_list (Sys.readdir Config.db_path))

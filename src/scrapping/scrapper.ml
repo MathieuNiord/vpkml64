@@ -1,16 +1,6 @@
 open Soup
 open Crawler
 
-let rec first_x_items (list : Wrapper.t list) (x : int) : Wrapper.t list =
-  match list with
-  | [] -> []
-  | h :: t -> if x > 0 then h :: (first_x_items t (x - 1)) else []
-
-let recently_added (db : Database.t) : int =
-  let count : int = Repository.count db in
-  let new_count : int = Database.games_number db in
-  new_count - count
-
 let games_list (db : Database.t) (page : int) (pb : Progress.t) : Wrapper.t list =
   let soup = Database.soup db page in
   let items = browse_elements db.games_list_crawler soup |> to_list in
@@ -21,6 +11,11 @@ let games_list (db : Database.t) (page : int) (pb : Progress.t) : Wrapper.t list
     Progress.print pb (Some title);
     Wrapper.make title source db
   ) items
+
+let recently_added (db : Database.t) : int =
+  let count : int = Repository.count db in
+  let new_count : int = Database.games_number db in
+  new_count - count
 
 let recent_games_list (db : Database.t) : Wrapper.t list =
   let added : int = recently_added db in

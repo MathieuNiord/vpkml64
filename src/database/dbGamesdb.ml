@@ -7,7 +7,7 @@ open Database
 (* === Basic crawling configuration === *)
 
 let src_base_url : string = "https://gamesdb.launchbox-app.com" ;;
-let games_url : string = "https://gamesdb.launchbox-app.com/platforms/games/25-nintendo-64/page/"
+let games_url : string = "https://gamesdb.launchbox-app.com/platforms/games/25-nintendo-64/page/" ;;
 
 let games_crawler : t_element list =
   [

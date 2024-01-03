@@ -11,11 +11,13 @@ let games_list (db : Database.t) (page : int) (pb : Progress.t) : Wrapper.t list
     Progress.print pb (Some title);
     Wrapper.make title source db
   ) items
+;;
 
 let recently_added (db : Database.t) : int =
   let count : int = Repository.count db in
   let new_count : int = Database.games_number db in
   new_count - count
+;;
 
 let recent_games_list (db : Database.t) : Wrapper.t list =
   let added : int = recently_added db in
@@ -45,6 +47,7 @@ let recent_games_list (db : Database.t) : Wrapper.t list =
               | _ -> acc
           )) [] items
       ) (List.init pages ((+) 1)))
+;;
 
 let scrap_database (db : Database.t) : Wrapper.t list =
   let pages : int = db.pages_count
@@ -57,9 +60,12 @@ let scrap_database (db : Database.t) : Wrapper.t list =
   );
   let bar = Progress.create games_count in
   List.concat_map (fun page -> games_list db page bar) (List.init pages ((+) 1))
+;;
 
 let scrap (db : Database.t) : unit =
   scrap_database db |> Repository.overwrite db
+;;
 
 let scrap_recents (db : Database.t) : unit =
   recent_games_list db |> Repository.add_records db
+;;

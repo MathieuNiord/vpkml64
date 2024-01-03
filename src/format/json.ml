@@ -11,6 +11,7 @@ let count_entries json =
   match json with
   | `Assoc entries -> List.length entries
   | _ -> failwith "JSON is not an object"
+;;
 
 (* Creates a new file and adds its content. *)
 let write (content : t) (file : string) : unit =
@@ -27,6 +28,7 @@ let to_asset_option (json : t) : string option =
   match json with
   | `Null -> None
   | _ -> to_string_option json
+;;
 
 module Serializer = struct
 
@@ -35,6 +37,7 @@ module Serializer = struct
     match asset with
     | None -> "", `Null
     | Some a -> (a.kind |> asset_type_to_string), `String (a.url)
+  ;;
 
   (* Converts a Wrapper.t object into a json object for file writing *)
   let from_data (record : Wrapper.t) : string * t =
@@ -47,10 +50,12 @@ module Serializer = struct
           | hd::tl -> if hd <> None then (from_asset hd)::(aux tl) else (aux tl)
         in aux [record.icon; record.bg; record.logo])
     )]
+  ;;
 
   (* Converts a Wrapper.t list into a json object for file writing *)
   let from_list (records : Wrapper.t list) : t =
     `Assoc (List.map (fun (d) -> from_data d) records)
+  ;;
 
 end
 
@@ -60,6 +65,7 @@ module Deserializer = struct
     match json with
     | `String url -> Some {kind = asset ; url = url}
     | _ -> None
+  ;;
 
   let to_data (json : string * t) : Wrapper.t =
     let title, content = json in
@@ -72,6 +78,7 @@ module Deserializer = struct
         and bg    : Assets.t option = assets |> member Config.img_bg_name   |> to_asset_opt BG
         and logo  : Assets.t option = assets |> member Config.img_logo_name |> to_asset_opt LOGO in
           { title ; src ; icon ; bg ; logo }
+  ;;
 
   let to_list (json : t) : Wrapper.t list =
     match json with
@@ -82,8 +89,9 @@ module Deserializer = struct
         | hd::tl -> (to_data hd)::(aux tl)
       in aux entries
     | _ -> failwith "Can't convert json object into a list."
+  ;;
 
 end
 
 (* Prints a json object on console output (Debugging). *)
-let pretty_print (json : t) : unit = print_endline (Yojson.Basic.pretty_to_string json);;
+let pretty_print (json : t) : unit = print_endline (Yojson.Basic.pretty_to_string json) ;;

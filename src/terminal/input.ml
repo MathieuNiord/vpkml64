@@ -33,6 +33,7 @@ let rec get () : t =
     match input with
     | None -> get ()
     | _ -> input
+;;
 
 (** Register the C functions with OCaml. *)
 let () = 
@@ -43,3 +44,4 @@ let () =
   ; Callback.register "Enter" (fun () -> ENTER)
   ; Callback.register "Exit" (fun () -> QUIT)
   ; Callback.register "None" (fun () -> None)
+;;

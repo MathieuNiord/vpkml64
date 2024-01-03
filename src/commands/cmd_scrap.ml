@@ -14,6 +14,7 @@ let header (i : int) : string =
   ^ (colorize (centered "[INFO]: It should take a moment, please wait patiently till the end of the update <3.") Yellow None)
   ^ "\n\n"
   ^ ("Database [" ^ (string_of_int i) ^ "/" ^ (string_of_int (List.length Repository.local_databases)) ^ "]\n")
+;;
 
 let update () : unit =
   List.iteri (fun i db ->
@@ -24,9 +25,11 @@ let update () : unit =
   if (!((Cmd_update_list.cmd).state) = DISABLED) then set_state Cmd_update_list.cmd ENABLED ;
   if (!((Cmd_update_medias.cmd).state) = DISABLED) then set_state Cmd_update_medias.cmd ENABLED ;
   Menu.back_to_menu ()
+;;
 
 let initial_state : t_state =
   let files_count : int = Sys.readdir Config.db_path |> Array.length in
   if (files_count < (Repository.local_databases |> List.length)) then IMPORTANT else ENABLED
+;;
 
-let cmd : t = { name = "Scrap databases" ; f = update ; state = ref initial_state }
+let cmd : t = { name = "Scrap databases" ; f = update ; state = ref initial_state } ;;

@@ -3,7 +3,7 @@
 open Json
 
 (** [local_databases] is a list of all local databases. *)
-let local_databases : Database.t list = [DbHfsdb.db ; DbGamesdb.db]
+let local_databases : Database.t list = [DbHfsdb.db ; DbGamesdb.db] ;;
 
 (** [count db] returns the number of records in the database [db]. *)
 let count (db : Database.t) : int =
@@ -11,6 +11,7 @@ let count (db : Database.t) : int =
   else
     let json : Json.t = Json.parse_file db.file in
     Json.Deserializer.to_list json |> List.length
+;;
 
 let count_all () : int =
   let rec aux (databases : Database.t list) : int =
@@ -18,6 +19,7 @@ let count_all () : int =
     | [] -> 0
     | hd::tl -> (count hd) + (aux tl)
   in aux local_databases
+;;
 
 (** [get slug db] returns the record with the given [slug] from the database [db],
     or [None] if no such record exists. *)
@@ -29,6 +31,7 @@ let get (slug : string) (db : Database.t) : Wrapper.t option =
     match json |> member slug with
     | `Null -> None
     | obj -> Some ((slug, obj) |> Deserializer.to_data)
+;;
 
 (** [get_records db] returns a list of all records in the database [db]. *)
 let get_records (db : Database.t) : Wrapper.t list =
@@ -36,6 +39,7 @@ let get_records (db : Database.t) : Wrapper.t list =
   else
     let json : Json.t = Json.parse_file db.file in
     Json.Deserializer.to_list json
+;;
 
 (** [find slug] returns the record with the given [slug] from the local databases,
     or [None] if no such record exists. *)
@@ -48,6 +52,7 @@ let find (slug : string) : Wrapper.t option =
       | None -> aux tl
       | Some record -> Some record
   in aux local_databases
+;;
 
 (** [find_asset slug asset] returns the asset of type [asset] from the record
     with the given [slug] in the local databases, or [None] if no such record
@@ -65,12 +70,14 @@ let find_asset (slug : string) (asset : Assets.t_asset_type) : Assets.t option =
           | None -> aux tl
           | Some a -> Some a
   in aux local_databases
+;;
 
 (** [find_assets slug] returns the ICON, BG, and LOGO assets from the record
     with the given [slug] in the local databases. Each asset is returned as an option,
     which is [None] if the asset does not exist. *)
 let find_assets (slug : string) : Assets.t option * Assets.t option * Assets.t option =
   (find_asset slug ICON), (find_asset slug BG), (find_asset slug LOGO)
+;;
 
 (** [add db record] adds the [record] to the database [db]. *)
 let add (db : Database.t) (record : Wrapper.t) : unit =
@@ -78,6 +85,7 @@ let add (db : Database.t) (record : Wrapper.t) : unit =
   let records : Wrapper.t list = record::current_records in
   let json : Json.t = Json.Serializer.from_list records in
   Json.write json db.file
+;;
 
 (** [add_records db records] adds the list of [records] to the database [db]. *)
 let add_records (db : Database.t) (records : Wrapper.t list) : unit =
@@ -87,10 +95,12 @@ let add_records (db : Database.t) (records : Wrapper.t list) : unit =
     let records : Wrapper.t list = records @ current_records in
     let json : Json.t = Json.Serializer.from_list records in
     Json.write json db.file
+;;
 
 let overwrite (db : Database.t) (records : Wrapper.t list) : unit =
   let json : Json.t = Json.Serializer.from_list records in
   Json.write json db.file
+;;
 
 let update (slug : string) : unit =
   let open Wrapper in
@@ -109,6 +119,7 @@ let update (slug : string) : unit =
             ) |> Json.Serializer.from_list
           in Json.write updated_list hd.file
   in aux local_databases
+;;
 
 let update_records (records : Wrapper.t list) : unit =
   let rec aux (databases : Database.t list) : unit =
@@ -123,6 +134,7 @@ let update_records (records : Wrapper.t list) : unit =
       in Json.write updated_list hd.file ;
       aux tl
   in aux local_databases
+;;
 
 let update_database (db : Database.t) : unit =
   let games : Wrapper.t list = get_records db in
@@ -135,5 +147,6 @@ let update_database (db : Database.t) : unit =
       updated
     ) |> Json.Serializer.from_list
   in Json.write updated_list db.file
+;;
 
-let init : unit = SysUtils.create_directory Config.db_path
+let init : unit = SysUtils.create_directory Config.db_path ;;

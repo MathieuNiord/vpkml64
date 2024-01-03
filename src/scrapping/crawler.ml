@@ -3,7 +3,7 @@ open Lwt.Infix
 open Soup
 open Soup.Infix
 
-type t_element = Element of string | Elements of string [@@warning "-37"]
+type t_element = Element of string | Elements of string [@@warning "-37"] ;;
 
 (* Get the HTML body of the page url *)
 let body (url : string) : string Lwt.t =
@@ -60,3 +60,4 @@ let download_file url output_file =
         ~perm:0o666
         (output_file ^ "." ^ ext)
         (fun channel -> Lwt_io.write channel body_string)
+;;

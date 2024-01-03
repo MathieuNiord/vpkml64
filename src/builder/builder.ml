@@ -2,7 +2,7 @@ open Sys
 open Game
 open Config
 
-let fmtPath (s: string): string = "\"" ^ s ^ "\""
+let fmtPath (s: string): string = "\"" ^ s ^ "\"" ;;
 
 let icon_path (game : Game.t)     : string = (Game.icon_path game) ^ ".png" ;;
 let bg_path (game : Game.t)       : string = (Game.bg_path game) ^ ".png" ;;
@@ -36,12 +36,13 @@ let buildVpk (game : Game.t) : unit =
 ;;
 
 let clean (game : Game.t) : unit =
-  remove args_path;
-  remove param_path;
-  remove (icon_path game);
-  remove (bg_path game);
-  remove (startup_path game);
-  rmdir (Game.tmp_path game) ;;
+  remove args_path ;
+  remove param_path ;
+  remove (icon_path game) ;
+  remove (bg_path game) ;
+  remove (startup_path game) ;
+  rmdir (Game.tmp_path game)
+;;
 
 let clean_tmp () : unit =
   let dirs : string list = Sys.readdir tmp_path |> Array.to_list in

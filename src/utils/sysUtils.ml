@@ -9,6 +9,7 @@ let create_directory (dir : string) : unit =
         Sys.mkdir dir 0o644 (* 0o755 = read-only permission *);
         Unix.sleepf 0.5;
       with Sys_error _ -> ()
+;;
 
 let read_file (path : string) : string =
   let ic : in_channel = open_in path
@@ -19,3 +20,4 @@ let read_file (path : string) : string =
       in line ^ "\n" ^ (aux ())
     with End_of_file -> close_in ic ; ""
   in aux ()
+;;

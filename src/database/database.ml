@@ -36,6 +36,7 @@ let make
   ; background_from_page  = background_from_page
   ; logo_from_page        = logo_from_page
   ; file                  = (Config.db_path ^ (String.lowercase_ascii name) ^ ".json") }
+;;
 
 let soup (db : t) (page: int) : soup node = Lwt_main.run (body (db.url_games ^ (string_of_int page))) |> Soup.parse ;;
 

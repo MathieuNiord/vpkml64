@@ -41,3 +41,4 @@ let standardize (text : string) (max_length : int) : string =
   else
     let remaining = max_length - length in
       text ^ String.make remaining ' '
+;;

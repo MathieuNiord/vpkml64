@@ -23,19 +23,21 @@ struct
   type t = string * Cmd.t list ;;
   let lst_menu : t ref = ref ("", []) ;;
 
-  let set_menu (menu : t) : unit = lst_menu := menu
-  let get_menu () : t = !lst_menu
+  let set_menu (menu : t) : unit = lst_menu := menu ;;
+  let get_menu () : t = !lst_menu ;;
 
-  let get_menu_title (m : t) : string = let (title, _) = m in title
-  let get_commands (m : t) : Cmd.t list =  let (_, commands) = m in commands
+  let get_menu_title (m : t) : string = let (title, _) = m in title ;;
+  let get_commands (m : t) : Cmd.t list =  let (_, commands) = m in commands ;;
 
   let get_command (m : t) (i : int) : Cmd.t =
     let commands = get_commands m in
     List.nth commands (i - 1)
+  ;;
 
   let get_commands_length (m : t) : int =
     let commands = get_commands m in
     List.length commands
+  ;;
 
   let run_command (menu : t) (selected : int) : unit =
     let open Cmd in
@@ -44,12 +46,13 @@ struct
     let cmd = List.nth commands (selected - 1) in
       if !(cmd.state) = IMPORTANT then set_state cmd ENABLED ;
       run cmd
+  ;;
 end
 
-type t = Private.t
+type t = Private.t ;;
 
 (* Creates a new menu with the given title and options *)
-let create (title : string) (options : Cmd.t list) : t = (title, options)
+let create (title : string) (options : Cmd.t list) : t = (title, options) ;;
 
 (* Displays the menu and handles user input *)
 let show (menu : t) : unit =
@@ -68,6 +71,7 @@ let show (menu : t) : unit =
           else if (input = QUIT) then ()  (* Otherwise, displaying the updated menu *)
           else aux new_choice
       )) in aux 1
+;;
 
 let back_to_menu () : unit =
   let open Private in
@@ -78,3 +82,4 @@ let back_to_menu () : unit =
       | ENTER -> show (get_menu ())
       | _ -> aux () in
     aux ()
+;;

@@ -11,38 +11,35 @@ let bg_path       (game : t) : string = (tmp_path game) ^ Config.img_bg_name
 let startup_path  (game : t) : string = (tmp_path game) ^ Config.img_logo_name
 
 (* Specials characters which are to avoid in ID generation. *)
-let avoid_char : string = ".!:_(),-'0123456";;
+let avoid_char : string = ".!:_(),-'";;
 
 (* Checks if a word is or contains chars to avoid.
    If not, returns the first capitalized letter of the word.
    Example : "The Legend of Zelda" -> "TLOZ"
 *)
 let check_word (word : string) : string =
-  let letter : char = Char.uppercase_ascii (word.[0])
-  in (
-  if not (String.contains_from avoid_char 0 (word.[0]))
-      then
-          if (Char.equal (letter) (word.[0]))
-          then String.make 1 letter
-          else ""
-  else word;
-)
+  if (int_of_string_opt word) <> None
+  then word
+  else
+    let letter : char = Char.uppercase_ascii (word.[0]) in
+      if not (String.contains_from avoid_char 0 (word.[0]))
+      then String.make 1 letter
+      else ""
+;;
 
-(* Creates an id for the vpk signature. 9 chars max *)
+(* Create an ID of 9 characters from the slug
+   Examples :
+    "the-legend-of-zelda" -> "D64TLOZ"
+    "super-mario-64" -> "D64SM64"
+*)
 let create_id (slug : string) : string =
-  let tronc_title : string list = String.split_on_char '-' slug
-  and id : string ref = ref "D64"
-  and temp_id : string ref = ref ""
-  in (
-      List.iter (fun word -> temp_id := !temp_id ^ (check_word (word))) tronc_title;
-      let nb_zeros : int = 9 - (String.length (!id)) - (String.length (!temp_id)) in (
-          for _ = 1 to nb_zeros do
-              id := !id ^ "0"
-          done
-      );
-      id := !id ^ !temp_id;
-  );
-  String.sub !id 0 9
+  let words : string list = String.split_on_char '-' slug in
+  let id : string = List.fold_left (fun acc word -> acc ^ (check_word word)) "" words in
+  let id_length : int = String.length id in
+  let id : string = if id_length > 6 then String.sub id 0 6 else id in
+  let id : string = if id_length < 6 then id ^ (String.make (6 - id_length) '0') else id in
+  "D64" ^ id
+;;
 
 (* Constructs a game object *)
 let make (title : string) : t =
@@ -53,13 +50,15 @@ let make (title : string) : t =
   let directory_name : string = Config.tmp_path ^ slug ^ "/" in (
     SysUtils.create_directory directory_name;
     Game (game_title, slug, id, directory_name, rom_path)
-  );;
+  )
+;;
 
 let download_asset (asset : Assets.t option) (path : string) : unit =
   let open Crawler in
   match asset with
   | Some a -> Lwt_main.run (download_file a.url path)
   | None -> failwith "No asset found"
+;;
 
 (* Downloads assets of a game *)
 let download_assets (game : t) =
@@ -69,27 +68,32 @@ let download_assets (game : t) =
       if media_exists bg      then (download_asset bg (bg_path game)) ;
       if media_exists startup then (download_asset startup (startup_path game)) ;
     )
+;;
 
 (* Runs conversion program which resizes images *)
 let convert_assets (game : t) : unit =
   Sys.readdir (tmp_path game) |> Array.iter (fun file ->
     Assets.convert_to_png (tmp_path game ^ file)
   )
+;;
 
 (* Resizes medias *)
 let resize_assets (game : t) : unit =
-  Assets.resize ((icon_path game) ^ ".png") (256, 256) ;
+  Assets.resize ((icon_path game) ^ ".png") (128, 128) ;
   Assets.resize ((bg_path game) ^ ".png") (840, 500) ;
-  Assets.resize ((startup_path game) ^ ".png") (280, 150)
+  Assets.resize ((startup_path game) ^ ".png") (280, 158)
+;;
 
 let reduce_assets (game : t) : unit =
   Assets.reduce_color_palette ((icon_path game) ^ ".png") ;
   Assets.reduce_color_palette ((bg_path game) ^ ".png") ;
   Assets.reduce_color_palette ((startup_path game) ^ ".png")
+;;
 
 let print (game : t) : unit =
   let title : string = title game
   and slug  : string = slug game in
   Printf.printf "Title: %s\tSlug:%s\n" title slug
+;;
 
-let () = SysUtils.create_directory Config.tmp_path;;
+let () = SysUtils.create_directory Config.tmp_path ;;

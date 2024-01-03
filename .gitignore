@@ -35,9 +35,10 @@ test/
 _opam/
 
 # Local files
-db/
+.db/
 roms/*
-res/vpks/
+vpks/
+place_roms_here/*
 
 # VsCode settings
 .vscode/

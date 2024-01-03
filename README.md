@@ -46,7 +46,7 @@ _*Info*: You may need to update your Cygwin binaries/packages through the instal
 Here, you got several information:
 - First, the program says that it found 3 games inside the directory ;
 - Then, it shows a list of these games and missing medias of each ;
-- Finally, it builds `.vpk` files of complete games and will save them in `.\res\vpks`.
+- Finally, it builds `.vpk` files of complete games and will save them in `.\vpks`.
 
 ## Special thanks
 - [@CraigFe](https://github.com/craigfe/progress/) - Who helped me to better understand C interfacing in OCaml through his projects, and from who I took the terminal width calculation method 

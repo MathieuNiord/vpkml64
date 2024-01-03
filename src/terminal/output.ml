@@ -61,19 +61,24 @@ let max_word_len (options : string list) : int =
 
 let option_output (cmd : Cmd.t) (number : int) (selected : bool) : string =
   let open Cmd in
+  let prefix : string =
+    match !(cmd.state) with
+    | IMPORTANT -> "(!) "
+    | _ -> (string_of_int number) ^ ". "
+  in
   let fg_color : color = if selected then Black else
     match !(cmd.state) with
-    | IMPORTANT -> Green
+    | IMPORTANT -> Yellow
     | ENABLED  -> White
     | DISABLED -> Grey
   and bg_color : color =
     if selected then
       match !(cmd.state) with
-      | IMPORTANT -> Green
+      | IMPORTANT -> White
       | DISABLED -> Grey
       | _ -> White
     else None
-  in (colorize (string_of_int number ^ ". " ^ cmd.name) fg_color bg_color)
+  in (colorize (prefix ^ cmd.name) fg_color bg_color)
 
 (* Display a list of options on two columns from a list as:
    ["first"; "second"; "third"] -> "1. first\t\t2. second\n3. third\n"
